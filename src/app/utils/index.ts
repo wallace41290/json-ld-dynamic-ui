@@ -1,2 +1,1 @@
-export * from "./extract-contexts";
-export * from "./extracted-contexts.model";
+export * from './jsonld-loaders.model';

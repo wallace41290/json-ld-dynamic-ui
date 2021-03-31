@@ -1,31 +1,68 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import {
-  Classification,
-  Context,
-  GenericResource,
-  HasContext,
-  HasId,
-ResolvedResouce
-} from "../models";
-import { extractContexts} from '../utils'; 
-import { ExtractedContexts } from "../utils/extracted-contexts.model";
-import { CacheInterceptor } from "./cache-interceptor.service";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import * as jsonld from 'jsonld';
+import { JsonLdArray } from 'jsonld/jsonld-spec';
+import { from, Observable } from 'rxjs';
 
-@Injectable({ providedIn: "root" })
+import { Classification, Context, GenericResource, HasContext, HasId } from '../models';
+import { getHttpClientLoader } from '../utils';
+import { CacheInterceptor } from './cache-interceptor.service';
+
+@Injectable({ providedIn: 'root' })
 export class MockApiService {
+  private jsonLdLoader = getHttpClientLoader(this.httpClient);
+  private jsonLdLoaderClearCache = getHttpClientLoader(this.httpClient, false);
+
   constructor(private httpClient: HttpClient) {}
 
-  getClassification(id: string, clearCache = false) {
+  /**
+   * Get the JSON-LD {@link https://json-ld.org/spec/latest/json-ld/#expanded-document-form Expanded Document Form}
+   * of a resource at a given URL.
+   *
+   *  Expansion is the process of taking a JSON-LD document
+   * and applying a `@context` such that all IRIs, types,
+   * and values are expanded so that the `@context` is no longer
+   * necessary.
+   *
+   * @param url The URL that the resource can be retrieved via a GET
+   * @param clearCache Whether to clear the cache, defaults to false
+   * @returns the expanded resource
+   */
+  expandResource(url: string, clearCache = false): Observable<JsonLdArray> {
+    return from(
+      jsonld.expand(
+        // According to the docs, it can take a URL
+        // See https://github.com/digitalbazaar/jsonld.js#expand
+        url as jsonld.JsonLdDocument,
+        {
+          documentLoader: clearCache
+            ? this.jsonLdLoaderClearCache
+            : this.jsonLdLoader,
+        }
+      )
+    );
+  }
+
+  getClassification(
+    id: string,
+    clearCache = false
+  ): Observable<Classification> {
     return this.httpClient.get<Classification>(
       `http://localhost:8080/aria-api/api/classification/${id}`,
       { headers: clearCache ? CacheInterceptor.CLEAR_CACHE_HEADERS : undefined }
     );
   }
 
-  getContext(iri: string, clearCache = false) {
-    return this.httpClient.get<Context>(iri, {
-      headers: clearCache ? CacheInterceptor.CLEAR_CACHE_HEADERS : undefined
+  /**
+   * Contexts can either be directly embedded into the document (an embedded context) or be referenced using a URL.
+   * This method will GET refernced contexts by the given URL.
+   * @param url A referenced context's URL
+   * @param clearCache Whether to clear the cache, default to false
+   * @returns The context
+   */
+  getContext(url: string, clearCache = false): Observable<Context> {
+    return this.httpClient.get<Context>(url, {
+      headers: clearCache ? CacheInterceptor.CLEAR_CACHE_HEADERS : undefined,
     });
   }
 
@@ -33,26 +70,11 @@ export class MockApiService {
    * Get a resource. If the type is not known, it will fall back to a GenericResource.
    */
   getResource<T extends HasContext & HasId = GenericResource>(
-    iri: string,
+    url: string,
     clearCache = false
-  ) {
-    return this.httpClient.get<T>(iri, {
-      headers: clearCache ? CacheInterceptor.CLEAR_CACHE_HEADERS : undefined
+  ): Observable<T> {
+    return this.httpClient.get<T>(url, {
+      headers: clearCache ? CacheInterceptor.CLEAR_CACHE_HEADERS : undefined,
     });
-  }
-
-  /**
-   * Get the resource, it's context, and all the context's terms
-   * in order to generically build up a UI.
-   */
-  getResolvedResource<R extends HasContext>(
-    resource: R
-  ): Observable<ResolvedResource<R>> {
-    const extractedContexts:ExtractedContexts = extractContexts(resource);
-    if(!extractedContexts.referencedContexts.length && !extractedContexts.referencedContexts.length){
-      return of(new ResolvedResouce(resource, new Array<Context>(), new Map<Term, GenericResource>()));
-    }
-    // resolve referenced contexts 
-    return extractedContexts.referencedContexts.length? : resolveTerms(ex);
   }
 }

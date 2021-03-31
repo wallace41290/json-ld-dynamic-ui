@@ -1,1 +1,62 @@
-hi
+<td-layout class="layout-card-over-demo" sidenavWidth="280px">
+  <td-layout-nav toolbarTitle="JSON-LD Dynamic UI Mess-around">
+    <div td-toolbar-content>
+      <button
+        mat-icon-button
+        [matTooltip]="themeOptions[activeTheme].tooltip"
+        (click)="toggleTheme()"
+      >
+        <mat-icon>{{ themeOptions[activeTheme].icon }}</mat-icon>
+      </button>
+    </div>
+
+    <td-layout-card-over>
+      <form
+        class="resource-selection-form"
+        [formGroup]="form"
+        (ngSubmit)="displayResource()"
+      >
+        <mat-form-field>
+          <mat-label>Resource Type</mat-label>
+          <mat-select formControlName="type">
+            <mat-option
+              *ngFor="let option of resourceTypeOptions"
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </mat-option>
+          </mat-select>
+          <mat-error>Resource type is required</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>ID</mat-label>
+          <input matInput type="text" formControlName="id" />
+          <mat-error>ID is required</mat-error>
+        </mat-form-field>
+        <button
+          aria-label="Display resource"
+          color="accent"
+          mat-mini-fab
+          type="submit"
+        >
+          <mat-icon>auto_fix_hight</mat-icon>
+        </button>
+      </form>
+      <div td-after-card>
+        <mat-progress-bar
+          *ngIf="loading$ | async"
+          color="accent"
+          mode="indeterminate"
+        ></mat-progress-bar>
+
+        <td-json-formatter
+          class="on-background"
+          [data]="expanded$ | async"
+          key="Expanded JSON"
+          [levelsOpen]="4"
+        >
+        </td-json-formatter>
+      </div>
+    </td-layout-card-over>
+  </td-layout-nav>
+</td-layout>

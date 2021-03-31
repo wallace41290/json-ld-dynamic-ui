@@ -1,0 +1,40 @@
+app-root {
+  [td-toolbar-content] {
+    margin-left: auto;
+  }
+
+  .td-layout-card-over .mat-card {
+    z-index: 100;
+  }
+
+  .resource-selection-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > * {
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+
+    mat-form-field {
+      margin-bottom: -1.34375em;
+    }
+
+    button {
+      align-self: flex-start;
+      margin-top: 6px;
+    }
+  }
+
+  [td-after-card] {
+    margin-top: 24px;
+
+    mat-progress-bar {
+      position: absolute;
+      left: 0;
+      top: 64px;
+      z-index: 10;
+    }
+  }
+}
