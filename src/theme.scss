@@ -1,0 +1,46 @@
+@import "~@angular/material/theming";
+@import "~@covalent/core/theming/all-theme";
+
+@include mat-core();
+
+$primary: mat-palette($mat-purple, 700, 500, 800);
+$accent: mat-palette($mat-green, A200, A100, A400);
+
+$warn: mat-palette($mat-red, 600, 100, 900);
+
+$light-theme: mat-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn,
+    ),
+  )
+);
+$dark-theme: mat-dark-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn,
+    ),
+  )
+);
+
+@include angular-material-theme($dark-theme);
+@include covalent-theme($dark-theme);
+
+app-root:not(.light-theme) {
+  td-json-formatter.on-background {
+    .td-json-formatter-wrapper {
+      .key {
+        color: mat-color($accent);
+      }
+    }
+  }
+}
+
+.light-theme {
+  @include angular-material-theme($light-theme);
+  @include covalent-theme($light-theme);
+}
