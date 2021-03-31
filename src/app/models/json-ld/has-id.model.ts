@@ -1,3 +1,3 @@
 export interface HasId {
-  "@id": string;
+  '@id': string;
 }

@@ -8,8 +8,8 @@ export function isExpandedTermDefinition(
 ): something is ExpandedTermDefinition {
   if (something instanceof Map) {
     // Make sure all keys and values are strings
-    for (let [key, value] of  map.entries()) {
-      if (typeof key !== "string" || typeof value !== "string") {
+    for (const [key, value] of something.entries()) {
+      if (typeof key !== 'string' || typeof value !== 'string') {
         return false;
       }
     }

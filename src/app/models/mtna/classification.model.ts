@@ -1,6 +1,6 @@
-import { Code } from "./code.model";
-import { HasContext, HasId } from "../json-ld";
-import { Level } from "./level.model";
+import { HasContext, HasId } from '../json-ld';
+import { Code } from './code.model';
+import { Level } from './level.model';
 
 export interface Classification extends HasContext, HasId {
   name: string;

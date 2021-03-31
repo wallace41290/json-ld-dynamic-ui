@@ -1,7 +1,5 @@
-import {
-  TermDefinition,
-  isExpandedTermDefinition
-} from "./term-definition.model";
+import { isExpandedTermDefinition } from './expanded-term-definition.model';
+import { TermDefinition } from './term-definition.model';
 
 /**
  * A context is used to map terms to IRIs.
@@ -13,12 +11,12 @@ export type Context = Map<TermDefinition[0], TermDefinition[1]>;
 
 export function isContext(something: unknown): something is Context {
   if (something instanceof Map) {
-    for (let [key, value] of map.entries()) {
+    for (const [key, value] of something.entries()) {
       if (
         // Make sure all keys are terms
-        typeof key !== TermDefinition[0] &&
+        typeof key !== 'string' &&
         // Make sure all values are string | ExpandedTermDefinition
-        (typeof value !== "string" || !isExpandedTermDefinition(value))
+        (typeof value !== 'string' || !isExpandedTermDefinition(value))
       ) {
         return false;
       }
