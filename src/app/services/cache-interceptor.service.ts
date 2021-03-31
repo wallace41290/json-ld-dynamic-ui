@@ -1,18 +1,12 @@
-import {
-  HttpEvent,
-  HttpHandler,
-HttpHeaders,
-  HttpInterceptor,
-  HttpRequest,
-  HttpResponse
-} from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
-import { tap } from "rxjs/operators";
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
+/** Cache the responses of all GET requests. */
 @Injectable()
 export class CacheInterceptor implements HttpInterceptor {
-  static CLEAR_CACHE_HEADERS = new HttpHeaders({'clear-cache':'true'});
+  static CLEAR_CACHE_HEADERS = new HttpHeaders({ 'clear-cache': 'true' });
 
   private cache = new Map<HttpRequest<unknown>, HttpResponse<unknown>>();
 
@@ -20,18 +14,20 @@ export class CacheInterceptor implements HttpInterceptor {
     req: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (req.method !== "GET") {
+    if (req.method !== 'GET') {
       return next.handle(req);
     }
-    if (req.headers.get("clear-cache")) {
+    if (req.headers.get('clear-cache')) {
       this.cache.delete(req);
     }
-    const cachedResponse: HttpResponse<unknown> = this.cache.get(req);
+    const cachedResponse: HttpResponse<unknown> | undefined = this.cache.get(
+      req
+    );
     if (cachedResponse) {
       return of(cachedResponse.clone());
     } else {
       return next.handle(req).pipe(
-        tap(stateEvent => {
+        tap((stateEvent) => {
           if (stateEvent instanceof HttpResponse) {
             this.cache.set(req, stateEvent.clone());
           }
