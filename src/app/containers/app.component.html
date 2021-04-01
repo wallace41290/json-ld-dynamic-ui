@@ -16,7 +16,9 @@
         [formGroup]="form"
         (ngSubmit)="displayResource()"
       >
-        <mat-form-field>
+        <mat-form-field
+          [color]="activeTheme === 'LIGHT' ? 'primary' : 'accent'"
+        >
           <mat-label>Resource Type</mat-label>
           <mat-select formControlName="type">
             <mat-option
@@ -28,7 +30,9 @@
           </mat-select>
           <mat-error>Resource type is required</mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field
+          [color]="activeTheme === 'LIGHT' ? 'primary' : 'accent'"
+        >
           <mat-label>ID</mat-label>
           <input matInput type="text" formControlName="id" />
           <mat-error>ID is required</mat-error>
@@ -49,13 +53,38 @@
           mode="indeterminate"
         ></mat-progress-bar>
 
-        <td-json-formatter
-          class="on-background"
-          [data]="expanded$ | async"
-          key="Expanded JSON"
-          [levelsOpen]="4"
-        >
-        </td-json-formatter>
+        <mat-tab-group mat-align-tabs="center">
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon>code</mat-icon>
+              JSON
+            </ng-template>
+            <ng-template matTabContent>
+              <td-json-formatter
+                *ngIf="expanded$ | async as data"
+                class="on-background"
+                [data]="data"
+                key="Expanded JSON"
+                [levelsOpen]="4"
+              >
+              </td-json-formatter>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon>menu_book</mat-icon>
+              View
+            </ng-template>
+            <ng-template matTabContent><p>Coming soon...</p></ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon>edit</mat-icon>
+              Edit
+            </ng-template>
+            <ng-template matTabContent><p>Coming soon...</p></ng-template>
+          </mat-tab>
+        </mat-tab-group>
       </div>
     </td-layout-card-over>
   </td-layout-nav>

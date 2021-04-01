@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { TdDialogService } from '@covalent/core/dialogs';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { MockApiService } from '../services';
 
@@ -17,7 +17,7 @@ import { MockApiService } from '../services';
 export class AppComponent implements OnInit {
   @HostBinding('class.light-theme') lightThemeEnabeled = false;
 
-  expanded$ = new Subject<JsonLdArray>();
+  expanded$ = new BehaviorSubject<JsonLdArray | null | undefined>(undefined);
   loading$ = new BehaviorSubject<boolean>(false);
 
   form: FormGroup;
@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
   };
 
   constructor(
-    private _dialogService: TdDialogService,
+    private dialogService: TdDialogService,
     private fb: FormBuilder,
     iconRegistry: MatIconRegistry,
     private mockApiService: MockApiService
@@ -66,13 +66,22 @@ export class AppComponent implements OnInit {
         .subscribe({
           next: (expanded) => this.expanded$.next(expanded),
           error: (error: HttpErrorResponse) => {
+            this.expanded$.next(null);
+            this.loading$.next(false);
             console.error(error);
             if (error.status === 0) {
-              this._dialogService.openAlert({
+              this.dialogService.openAlert({
                 title: 'Server Error',
                 disableClose: true,
                 message:
                   'The server is not responding. Are you sure the Ariā API is running at "http://localhost:8080/aria-api/api"?',
+              });
+            }else{
+              this.dialogService.openAlert({
+                title: `${error.error.code} Error`,
+                disableClose: true,
+                message:
+                  error.error.errors?.join(','),
               });
             }
           },

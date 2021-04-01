@@ -28,7 +28,6 @@ app-root {
   }
 
   [td-after-card] {
-    margin-top: 24px;
 
     mat-progress-bar {
       position: absolute;
@@ -36,5 +35,9 @@ app-root {
       top: 64px;
       z-index: 10;
     }
+  }
+
+  .mat-tab-label-content .mat-icon {
+    margin-right: 8px;
   }
 }
