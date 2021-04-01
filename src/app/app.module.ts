@@ -10,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CovalentDialogsModule } from '@covalent/core/dialogs';
 import { CovalentJsonFormatterModule } from '@covalent/core/json-formatter';
 import { CovalentLayoutModule } from '@covalent/core/layout';
 
@@ -17,7 +18,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './containers';
 import { ApiKeyInterceptor, CacheInterceptor } from './services';
 
-const CovalentModules = [CovalentLayoutModule, CovalentJsonFormatterModule];
+const CovalentModules = [CovalentDialogsModule, CovalentLayoutModule, CovalentJsonFormatterModule];
 const MaterialModules = [
   MatButtonModule,
   MatIconModule,
