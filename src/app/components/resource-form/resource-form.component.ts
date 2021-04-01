@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { ThemeType } from '../theme-toggle';
+
 // tslint:disable: variable-name
 
 @Component({
@@ -57,7 +59,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceFormComponent {
-  @Input() activeTheme: 'LIGHT' | 'DARK' = 'DARK';
+  @Input() activeTheme: ThemeType = 'DARK';
 
   @Input()
   get formValue(): { type: string; id: string } | undefined {

@@ -5,6 +5,7 @@ import { TdDialogService } from '@covalent/core/dialogs';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { BehaviorSubject } from 'rxjs';
 
+import { ThemeType } from '../components';
 import { MockApiService } from '../services';
 
 @Component({
@@ -14,20 +15,15 @@ import { MockApiService } from '../services';
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
-  @HostBinding('class.light-theme') lightThemeEnabeled = false;
+  @HostBinding('class.light-theme')
+  get lightThemeEnabeled(): boolean {
+    return this.activeTheme === 'LIGHT';
+  }
 
   expanded$ = new BehaviorSubject<JsonLdArray | null | undefined>(undefined);
   loading$ = new BehaviorSubject<boolean>(false);
 
-  activeTheme: 'DARK' | 'LIGHT' = 'DARK';
-  themeOptions = {
-    LIGHT: {
-      value: 'LIGHT',
-      icon: 'light_mode',
-      tooltip: 'Switch to dark mode',
-    },
-    DARK: { value: 'DARK', icon: 'dark_mode', tooltip: 'Switch to light mode' },
-  };
+  activeTheme: ThemeType = 'DARK';
 
   initialResource: { type: string; id: string } = {
     type: 'http://localhost:8080/aria-api/api/classification/',
@@ -78,10 +74,5 @@ export class AppComponent implements OnInit {
 
     // TODO dynamic UI display
     // TODO resolve terms
-  }
-
-  toggleTheme(): void {
-    this.activeTheme = this.activeTheme === 'LIGHT' ? 'DARK' : 'LIGHT';
-    this.lightThemeEnabeled = this.activeTheme === 'LIGHT';
   }
 }

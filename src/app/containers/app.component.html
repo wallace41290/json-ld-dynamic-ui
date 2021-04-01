@@ -1,13 +1,7 @@
 <td-layout class="layout-card-over-demo" sidenavWidth="280px">
   <td-layout-nav toolbarTitle="JSON-LD Dynamic UI Mess-around">
     <div td-toolbar-content>
-      <button
-        mat-icon-button
-        [matTooltip]="themeOptions[activeTheme].tooltip"
-        (click)="toggleTheme()"
-      >
-        <mat-icon>{{ themeOptions[activeTheme].icon }}</mat-icon>
-      </button>
+      <app-theme-toggle [(value)]="activeTheme"></app-theme-toggle>
     </div>
 
     <td-layout-card-over>
