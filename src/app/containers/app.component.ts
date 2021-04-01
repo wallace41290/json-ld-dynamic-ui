@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   expanded$ = new BehaviorSubject<JsonLdArray | null | undefined>(undefined);
   loading$ = new BehaviorSubject<boolean>(false);
 
-  activeTheme: ThemeType = 'DARK';
+  activeTheme: ThemeType = 'LIGHT';
 
   initialResource: { type: string; id: string } = {
     type: 'http://localhost:8080/aria-api/api/classification/',
