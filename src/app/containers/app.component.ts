@@ -1,6 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostBinding, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatIconRegistry } from '@angular/material/icon';
 import { TdDialogService } from '@covalent/core/dialogs';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
@@ -20,19 +19,6 @@ export class AppComponent implements OnInit {
   expanded$ = new BehaviorSubject<JsonLdArray | null | undefined>(undefined);
   loading$ = new BehaviorSubject<boolean>(false);
 
-  form: FormGroup;
-
-  resourceTypeOptions = [
-    {
-      label: 'Classification',
-      value: 'http://localhost:8080/aria-api/api/classification/',
-    },
-    {
-      label: 'Concordance',
-      value: 'http://localhost:8080/aria-api/api/concordance/',
-    },
-  ];
-
   activeTheme: 'DARK' | 'LIGHT' = 'DARK';
   themeOptions = {
     LIGHT: {
@@ -43,56 +29,52 @@ export class AppComponent implements OnInit {
     DARK: { value: 'DARK', icon: 'dark_mode', tooltip: 'Switch to light mode' },
   };
 
+  initialResource: { type: string; id: string } = {
+    type: 'http://localhost:8080/aria-api/api/classification/',
+    id: 'subjects_v1',
+  };
+
   constructor(
     private dialogService: TdDialogService,
-    private fb: FormBuilder,
     iconRegistry: MatIconRegistry,
     private mockApiService: MockApiService
   ) {
     iconRegistry.setDefaultFontSetClass('material-icons-outlined');
-
-    this.form = this.fb.group({
-      type: [this.resourceTypeOptions[0].value, Validators.required],
-      id: ['subjects_v1', Validators.required],
-    });
+    this.displayResource(this.initialResource);
   }
 
-  displayResource(): void {
-    if (this.form.valid) {
-      this.loading$.next(true);
-      const formValue: { type: string; id: string } = this.form.value;
-      this.mockApiService
-        .expandResource(`${formValue.type}${formValue.id}`)
-        .subscribe({
-          next: (expanded) => this.expanded$.next(expanded),
-          error: (error: HttpErrorResponse) => {
-            this.expanded$.next(null);
-            this.loading$.next(false);
-            console.error(error);
-            if (error.status === 0) {
-              this.dialogService.openAlert({
-                title: 'Server Error',
-                disableClose: true,
-                message:
-                  'The server is not responding. Are you sure the Ariā API is running at "http://localhost:8080/aria-api/api"?',
-              });
-            }else{
-              this.dialogService.openAlert({
-                title: `${error.error.code} Error`,
-                disableClose: true,
-                message:
-                  error.error.errors?.join(','),
-              });
-            }
-          },
-          complete: () => this.loading$.next(false),
-        });
-    }
+  displayResource(formValue: { type: string; id: string }): void {
+    this.loading$.next(true);
+    this.mockApiService
+      .expandResource(`${formValue.type}${formValue.id}`)
+      .subscribe({
+        next: (expanded) => this.expanded$.next(expanded),
+        error: (error: HttpErrorResponse) => {
+          this.expanded$.next(null);
+          this.loading$.next(false);
+          console.error(error);
+          if (error.status === 0) {
+            this.dialogService.openAlert({
+              title: 'Server Error',
+              disableClose: true,
+              message:
+                'The server is not responding. Are you sure the Ariā API is running at "http://localhost:8080/aria-api/api"?',
+            });
+          } else {
+            this.dialogService.openAlert({
+              title: `${error.error.code} Error`,
+              disableClose: true,
+              message: error.error.errors?.join(','),
+            });
+          }
+        },
+        complete: () => this.loading$.next(false),
+      });
   }
 
   ngOnInit(): void {
     // Display the initially set resource
-    this.displayResource();
+    this.displayResource(this.initialResource);
 
     // TODO dynamic UI display
     // TODO resolve terms

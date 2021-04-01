@@ -11,41 +11,11 @@
     </div>
 
     <td-layout-card-over>
-      <form
-        class="resource-selection-form"
-        [formGroup]="form"
-        (ngSubmit)="displayResource()"
-      >
-        <mat-form-field
-          [color]="activeTheme === 'LIGHT' ? 'primary' : 'accent'"
-        >
-          <mat-label>Resource Type</mat-label>
-          <mat-select formControlName="type">
-            <mat-option
-              *ngFor="let option of resourceTypeOptions"
-              [value]="option.value"
-            >
-              {{ option.label }}
-            </mat-option>
-          </mat-select>
-          <mat-error>Resource type is required</mat-error>
-        </mat-form-field>
-        <mat-form-field
-          [color]="activeTheme === 'LIGHT' ? 'primary' : 'accent'"
-        >
-          <mat-label>ID</mat-label>
-          <input matInput type="text" formControlName="id" />
-          <mat-error>ID is required</mat-error>
-        </mat-form-field>
-        <button
-          aria-label="Display resource"
-          color="accent"
-          mat-mini-fab
-          type="submit"
-        >
-          <mat-icon>auto_fix_hight</mat-icon>
-        </button>
-      </form>
+      <app-resource-form
+        [activeTheme]="activeTheme"
+        [formValue]="initialResource"
+        (submitted)="displayResource($event)"
+      ></app-resource-form>
       <div td-after-card>
         <mat-progress-bar
           *ngIf="loading$ | async"
