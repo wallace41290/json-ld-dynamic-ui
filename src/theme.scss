@@ -30,11 +30,32 @@ $dark-theme: mat-dark-theme(
 @include angular-material-theme($dark-theme);
 @include covalent-theme($dark-theme);
 
-app-root:not(.light-theme) {
+app-root {
+  &:not(.light-theme) {
+    td-json-formatter.on-background {
+      .td-json-formatter-wrapper {
+        .key {
+          color: mat-color($accent);
+        }
+        .value {
+          .function {
+            color: mat-color($accent);
+          }
+          .number,
+          .boolean {
+            color: mat-color($primary, 200);
+          }
+        }
+      }
+    }
+  }
   td-json-formatter.on-background {
     .td-json-formatter-wrapper {
-      .key {
-        color: mat-color($accent);
+      .value {
+        .number,
+        .boolean {
+          color: mat-color($accent, 800);
+        }
       }
     }
   }
