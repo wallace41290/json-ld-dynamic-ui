@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostBinding, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { TdDialogService } from '@covalent/core/dialogs';
+import { TdJsonFormatterComponent } from '@covalent/core/json-formatter';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 
@@ -41,6 +42,8 @@ export class AppComponent implements OnInit {
   ) {
     iconRegistry.setDefaultFontSetClass('material-icons-outlined');
     this.displayResource(this.initialResource);
+    // Hack to override default truncation limit
+    (TdJsonFormatterComponent as any).KEY_MAX_LENGTH = 150;
   }
 
   displayResource(formValue: { type: string; id: string }): void {
