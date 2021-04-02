@@ -4,12 +4,19 @@
   <ng-container *ngIf="property.value | isArray">
     <ng-container *ngFor="let prop of $any(property.value)">
       <ng-container *ngIf="prop['@id']; else values">
-        <app-generic-property-viewer
-          *ngFor="let property of prop | filterResourceProperties"
-          [property]="property"
-          [depth]="depth + 1"
+        <ng-container
+          *ngFor="
+            let property of prop | filterResourceProperties;
+            let last = last
+          "
         >
-        </app-generic-property-viewer>
+          <app-generic-property-viewer
+            [property]="property"
+            [depth]="depth + 1"
+          >
+          </app-generic-property-viewer>
+          <mat-divider *ngIf="last"></mat-divider>
+        </ng-container>
       </ng-container>
       <ng-template #values>
         <mat-list>
