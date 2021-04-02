@@ -11,11 +11,17 @@ import { CovalentJsonFormatterModule } from '@covalent/core/json-formatter';
 import { CovalentLayoutModule } from '@covalent/core/layout';
 
 import { AppRoutingModule } from './app-routing.module';
-import { ResourceFormModule, ThemeToggleModule } from './components';
+import { GenericResourceViewerModule, ResourceFormModule, ThemeToggleModule } from './components';
 import { AppComponent } from './containers';
+import { ExtractJsonLdObjectPipeModule } from './pipes';
 import { ApiKeyInterceptor, CacheInterceptor } from './services';
 
-const LocalModules = [ResourceFormModule, ThemeToggleModule];
+const LocalModules = [
+  ExtractJsonLdObjectPipeModule,
+  GenericResourceViewerModule,
+  ResourceFormModule,
+  ThemeToggleModule,
+];
 const CovalentModules = [
   CovalentDialogsModule,
   CovalentLayoutModule,

@@ -55,7 +55,11 @@
               <mat-icon>menu_book</mat-icon>
               View
             </ng-template>
-            <ng-template matTabContent><p>Coming soon...</p></ng-template>
+            <ng-template matTabContent>
+              <app-generic-resource-viewer
+                [json]="expanded$ | async | extractJsonLdObject"
+              ></app-generic-resource-viewer>
+            </ng-template>
           </mat-tab>
           <mat-tab>
             <ng-template mat-tab-label>

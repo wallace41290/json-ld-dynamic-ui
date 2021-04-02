@@ -3,6 +3,16 @@
 
 @include mat-core();
 
+@mixin generic-property-viewer-theme($theme) {
+  $is-dark: map-get($theme, is-dark);
+  $dark-background: rgba(255, 255, 255, 0.1);
+  $light-background: rgba(0, 0, 0, 0.1);
+
+  app-generic-property-viewer {
+    background: if($is-dark, $dark-background, $light-background);
+  }
+}
+
 $primary: mat-palette($mat-purple, 700, 500, 800);
 $accent: mat-palette($mat-green, A200, A100, A400);
 
@@ -29,6 +39,7 @@ $dark-theme: mat-dark-theme(
 
 @include angular-material-theme($dark-theme);
 @include covalent-theme($dark-theme);
+@include generic-property-viewer-theme($dark-theme);
 
 app-root {
   &:not(.light-theme) {
@@ -64,4 +75,5 @@ app-root {
 .light-theme {
   @include angular-material-theme($light-theme);
   @include covalent-theme($light-theme);
+  @include generic-property-viewer-theme($light-theme);
 }

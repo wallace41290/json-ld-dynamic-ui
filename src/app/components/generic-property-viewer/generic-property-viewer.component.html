@@ -1,0 +1,27 @@
+<ng-container *ngIf="property">
+  <!-- Show info about property, TODO need to resolve -->
+  <h3 class="property-name">{{ property.iri | tempPropName | titlecase }}</h3>
+  <ng-container *ngIf="property.value | isArray">
+    <ng-container *ngFor="let prop of $any(property.value)">
+      <ng-container *ngIf="prop['@id']; else values">
+        <app-generic-property-viewer
+          *ngFor="let property of prop | filterResourceProperties"
+          [property]="property"
+          [depth]="depth + 1"
+        >
+        </app-generic-property-viewer>
+      </ng-container>
+      <ng-template #values>
+        <mat-list>
+          <mat-list-item *ngIf="prop['@value']">
+            <p matLine>
+              {{ prop["@value"] }}
+              <span *ngIf="prop['@language']">[{{ prop["@language"] }}]</span>
+            </p>
+          </mat-list-item>
+        </mat-list>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <!-- TODO Handle other cases -->
+</ng-container>
