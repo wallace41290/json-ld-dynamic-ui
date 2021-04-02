@@ -17,19 +17,35 @@
           mode="indeterminate"
         ></mat-progress-bar>
 
-        <mat-tab-group mat-align-tabs="center">
+        <mat-tab-group mat-align-tabs="center" selectedIndex="2">
           <mat-tab>
             <ng-template mat-tab-label>
               <mat-icon>code</mat-icon>
-              JSON
+              Compacted (default)
             </ng-template>
             <ng-template matTabContent>
               <td-json-formatter
-                *ngIf="expanded$ | async as data"
+                *ngIf="compacted$ | async as data"
+                class="on-background"
+                [data]="data"
+                key="Compacted JSON"
+                [levelsOpen]="2"
+              >
+              </td-json-formatter>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon>code</mat-icon>
+              Expanded
+            </ng-template>
+            <ng-template matTabContent>
+              <td-json-formatter
+                *ngIf="expanded$ | async | extractJsonLdObject as data"
                 class="on-background"
                 [data]="data"
                 key="Expanded JSON"
-                [levelsOpen]="4"
+                [levelsOpen]="3"
               >
               </td-json-formatter>
             </ng-template>
