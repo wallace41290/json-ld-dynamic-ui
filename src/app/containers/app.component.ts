@@ -17,18 +17,28 @@ import { MockApiService } from '../services';
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
-  @HostBinding('class.light-theme')
-  get lightThemeEnabeled(): boolean {
-    return this.activeTheme === 'LIGHT';
-  }
-
-  compacted$ = new BehaviorSubject<GenericResource | null | undefined>(
-    undefined
+compacted$ = new BehaviorSubject<GenericResource | null | undefined>(
+  undefined
   );
   expanded$ = new BehaviorSubject<JsonLdArray | null | undefined>(undefined);
   loading$ = new BehaviorSubject<boolean>(false);
 
-  activeTheme: ThemeType = 'LIGHT';
+  get activeTheme(): ThemeType {
+    return this._activeTheme;
+  }
+  set activeTheme(theme: ThemeType) {
+    if (this._activeTheme !== theme) {
+      this._activeTheme = theme;
+
+      // Set/remove class on body element
+      if (this._activeTheme === 'LIGHT') {
+        this.renderer.addClass(document?.body, 'light-theme');
+      } else {
+        this.renderer.removeClass(document?.body, 'light-theme');
+      }
+    }
+  }
+  private _activeTheme: ThemeType = 'LIGHT';
 
   initialResource: { type: string; id: string } = {
     type: 'http://localhost:8080/aria-api/api/classification/',
@@ -38,7 +48,8 @@ export class AppComponent implements OnInit {
   constructor(
     private dialogService: TdDialogService,
     iconRegistry: MatIconRegistry,
-    private mockApiService: MockApiService
+    private mockApiService: MockApiService,
+    private renderer: Renderer2
   ) {
     iconRegistry.setDefaultFontSetClass('material-icons-outlined');
     this.displayResource(this.initialResource);
