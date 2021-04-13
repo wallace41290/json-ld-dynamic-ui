@@ -1,0 +1,41 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()">
+  <mat-form-field [color]="activeTheme === 'LIGHT' ? 'primary' : 'accent'">
+    <mat-label>Resource Type</mat-label>
+    <mat-select formControlName="type" (selectionChange)="handleTypeChange($event)">
+      <mat-option
+        *ngFor="let option of resourceTypeOptions"
+        [value]="option.value"
+      >
+        {{ option.label }}
+      </mat-option>
+    </mat-select>
+    <mat-error>Resource type is required</mat-error>
+  </mat-form-field>
+  <mat-form-field [color]="activeTheme === 'LIGHT' ? 'primary' : 'accent'">
+    <mat-label>ID</mat-label>
+    <input
+      matInput
+      type="text"
+      formControlName="id"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of filteredOptions$ | async"
+        [value]="option.id"
+      >
+        {{ option.name || option.id }}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-error>ID is required</mat-error>
+  </mat-form-field>
+  <button
+    aria-label="Display resource"
+    color="accent"
+    [disabled]="pending"
+    mat-mini-fab
+    type="submit"
+  >
+    <mat-icon>auto_fix_hight</mat-icon>
+  </button>
+</form>

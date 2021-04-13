@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deploy":"ng deploy --base-href=/json-ld-dynamic-ui/"
+    "deploy": "ng deploy --base-href=/json-ld-dynamic-ui/"
   },
   "private": true,
   "dependencies": {
@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "~11.2.4",
     "@angular/router": "~11.2.4",
     "@covalent/core": "github:Teradata/covalent-nightly",
+    "@ngneat/until-destroy": "^8.0.4",
     "jsonld": "^5.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

@@ -1,14 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, HostBinding, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { TdDialogService } from '@covalent/core/dialogs';
 import { TdJsonFormatterComponent } from '@covalent/core/json-formatter';
+import { NodeObject } from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { BehaviorSubject, forkJoin } from 'rxjs';
 
-import { ThemeType } from '../components';
-import { GenericResource } from '../models';
+import { ResourceOption, ThemeType } from '../components';
+import { GenericResource, OrArray } from '../models';
 import { MockApiService } from '../services';
+
+// tslint:disable: variable-name
 
 @Component({
   selector: 'app-root',
@@ -17,8 +20,8 @@ import { MockApiService } from '../services';
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
-compacted$ = new BehaviorSubject<GenericResource | null | undefined>(
-  undefined
+  compacted$ = new BehaviorSubject<GenericResource | null | undefined>(
+    undefined
   );
   expanded$ = new BehaviorSubject<JsonLdArray | null | undefined>(undefined);
   loading$ = new BehaviorSubject<boolean>(false);
@@ -44,6 +47,7 @@ compacted$ = new BehaviorSubject<GenericResource | null | undefined>(
     type: 'http://localhost:8080/aria-api/api/classification/',
     id: 'subjects_v1',
   };
+  options$ = new BehaviorSubject<ResourceOption[]>([]);
 
   constructor(
     private dialogService: TdDialogService,
@@ -52,7 +56,6 @@ compacted$ = new BehaviorSubject<GenericResource | null | undefined>(
     private renderer: Renderer2
   ) {
     iconRegistry.setDefaultFontSetClass('material-icons-outlined');
-    this.displayResource(this.initialResource);
     // Hack to override default truncation limit
     (TdJsonFormatterComponent as any).KEY_MAX_LENGTH = 150;
   }
@@ -94,5 +97,51 @@ compacted$ = new BehaviorSubject<GenericResource | null | undefined>(
   ngOnInit(): void {
     // Display the initially set resource
     this.displayResource(this.initialResource);
+
+    // Get initial resource options
+    this.updateResourceOptions(
+      'http://localhost:8080/aria-api/api/classification/'
+    );
+  }
+
+  updateResourceOptions(
+    value:
+      | 'http://localhost:8080/aria-api/api/classification/'
+      | 'http://localhost:8080/aria-api/api/concordance/'
+  ): void {
+    if (value === 'http://localhost:8080/aria-api/api/classification/') {
+      this.mockApiService.getClassifications().subscribe((classifications) => {
+        this.mapToResourceOptions(
+          classifications,
+          'http://localhost:8080/aria-api/api/classification/'
+        );
+      });
+    } else {
+      this.mockApiService.getConcordances().subscribe((concordances) => {
+        this.mapToResourceOptions(
+          concordances,
+          'http://localhost:8080/aria-api/api/concordance/'
+        );
+      });
+    }
+  }
+
+  private mapToResourceOptions(
+    objects: OrArray<NodeObject> | undefined,
+    replaceString: string
+  ): void {
+    if (Array.isArray(objects)) {
+      this.options$.next(
+        objects
+          .filter((c) => c['@id'])
+          .map((c) => {
+            const id: string = (c['@id'] as string).replace(replaceString, '');
+            const name = c.name as string | undefined;
+            return new ResourceOption(id, name || id);
+          })
+      );
+    } else {
+      this.options$.next([]);
+    }
   }
 }

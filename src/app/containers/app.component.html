@@ -8,7 +8,10 @@
       <app-resource-form
         [activeTheme]="activeTheme"
         [formValue]="initialResource"
+        [options]="options$ | async"
+        [pending]="loading$ | async"
         (submitted)="displayResource($event)"
+        (typeChange)="updateResourceOptions($event)"
       ></app-resource-form>
       <div td-after-card>
         <mat-progress-bar

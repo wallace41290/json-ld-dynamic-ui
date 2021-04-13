@@ -1,10 +1,19 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as jsonld from 'jsonld';
+import { NodeObject } from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { Classification, Context, GenericResource, HasContext, HasId } from '../models';
+import {
+  Classification,
+  Context,
+  GenericResource,
+  HasContext,
+  HasId,
+  OrArray,
+} from '../models';
 import { getHttpClientLoader } from '../utils';
 import { CacheInterceptor } from './cache-interceptor.service';
 
@@ -76,5 +85,21 @@ export class MockApiService {
     return this.httpClient.get<T>(url, {
       headers: clearCache ? CacheInterceptor.CLEAR_CACHE_HEADERS : undefined,
     });
+  }
+
+  getClassifications(): Observable<OrArray<jsonld.NodeObject> | undefined> {
+    return this.httpClient
+      .get<{ results: NodeObject }>(
+        'http://localhost:8080/aria-api/api/search/classifications?limit=40&start=0'
+      )
+      .pipe(map((response) => response.results['@graph']));
+  }
+
+  getConcordances(): Observable<OrArray<jsonld.NodeObject> | undefined> {
+    return this.httpClient
+      .get<{ results: NodeObject }>(
+        'http://localhost:8080/aria-api/api/search/concordances?limit=40&start=0'
+      )
+      .pipe(map((response) => response.results['@graph']));
   }
 }
