@@ -60,8 +60,23 @@ export class StoreService {
       this.mockApiService.expandResource(`${formValue.type}${formValue.id}`),
     ]).subscribe({
       next: ([compacted, expanded]) => {
-        this.compacted = compacted;
-        this.expanded = expanded;
+        if (compacted.warning) {
+          this.dialogService
+            .openConfirm({ title: 'Warning', message: compacted.warning, disableClose: true, isDestructive: true, acceptButton: 'PROCEED' })
+            .afterClosed()
+            .subscribe((accept: boolean) => {
+              if (accept) {
+                this.compacted = compacted.response;
+                this.expanded = expanded;
+              } else {
+                this.compacted = null;
+                this.expanded = null;
+              }
+            });
+        } else {
+          this.compacted = compacted.response;
+          this.expanded = expanded;
+        }
       },
       error: (error: HttpErrorResponse) => {
         this.compacted = null;

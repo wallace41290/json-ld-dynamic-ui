@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { Classification, Context, GenericResource, HasContext, HasId, OrArray } from '@app/shared/models';
 import { getHttpClientLoader } from '@app/shared/utils/jsonld-loaders.model';
 import { CacheInterceptor } from './cache-interceptor.service';
+import { WarnableResponse } from '../models/warnable-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class MockApiService {
@@ -65,10 +66,29 @@ export class MockApiService {
   /**
    * Get a resource. If the type is not known, it will fall back to a GenericResource.
    */
-  getResource<T extends HasContext & HasId = GenericResource>(url: string, clearCache = false): Observable<T> {
-    return this.httpClient.get<T>(url, {
-      headers: clearCache ? CacheInterceptor.CLEAR_CACHE_HEADERS : undefined,
-    });
+  getResource<T extends HasContext & HasId = GenericResource>(url: string, clearCache = false): Observable<WarnableResponse<T>> {
+    return this.httpClient
+      .get<T>(url, {
+        headers: clearCache ? CacheInterceptor.CLEAR_CACHE_HEADERS : undefined,
+      })
+      .pipe(
+        map((response) => {
+          let warning: string | undefined;
+          // Create warning for large classification details
+          if (
+            Array.isArray(response['@context']) &&
+            response['@context'].some((c) => c === 'http://localhost:8080/aria-api/api/context/classification-detail')
+          ) {
+            const classification = (response as unknown) as Classification;
+            if (classification.levels?.length > 3) {
+              warning = `This classification has ${classification.levels.length || 0} levels and ${
+                classification.codes?.length || 0
+              } root codes and could be very large which could cause long render times or the browser could lock up.`;
+            }
+          }
+          return new WarnableResponse<T>(response, warning);
+        })
+      );
   }
 
   getClassifications(): Observable<OrArray<jsonld.NodeObject> | undefined> {

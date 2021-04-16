@@ -6,3 +6,4 @@ export * from './mtna/index';
 export * from './nav-tab-item.model';
 export * from './or-array.model';
 export * from './property-type.model';
+export * from './warnable-response.model';
