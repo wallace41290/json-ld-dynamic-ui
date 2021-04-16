@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import * as jsonld from 'jsonld';
-import { NodeObject } from 'jsonld';
+import { expand, NodeObject, JsonLdDocument } from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -33,10 +32,10 @@ export class MockApiService {
    */
   expandResource(url: string, clearCache = false): Observable<JsonLdArray> {
     return from(
-      jsonld.expand(
+      expand(
         // According to the docs, it can take a URL
         // See https://github.com/digitalbazaar/jsonld.js#expand
-        url as jsonld.JsonLdDocument,
+        url as JsonLdDocument,
         {
           documentLoader: clearCache ? this.jsonLdLoaderClearCache : this.jsonLdLoader,
         }
@@ -100,13 +99,13 @@ export class MockApiService {
       );
   }
 
-  getClassifications(): Observable<OrArray<jsonld.NodeObject> | undefined> {
+  getClassifications(): Observable<OrArray<NodeObject> | undefined> {
     return this.httpClient
       .get<{ results: NodeObject }>('http://localhost:8080/aria-api/api/search/classifications?limit=40&start=0')
       .pipe(map((response) => response.results['@graph']));
   }
 
-  getConcordances(): Observable<OrArray<jsonld.NodeObject> | undefined> {
+  getConcordances(): Observable<OrArray<NodeObject> | undefined> {
     return this.httpClient
       .get<{ results: NodeObject }>('http://localhost:8080/aria-api/api/search/concordances?limit=40&start=0')
       .pipe(map((response) => response.results['@graph']));
