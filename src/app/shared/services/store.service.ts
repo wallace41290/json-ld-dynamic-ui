@@ -51,6 +51,15 @@ export class StoreService {
     this._options.next(options);
   }
 
+  private readonly _rendering = new BehaviorSubject<boolean>(false);
+  readonly rendering$ = this._rendering.asObservable();
+  get rendering(): boolean {
+    return this._rendering.getValue();
+  }
+  set rendering(rendering: boolean) {
+    this._rendering.next(rendering);
+  }
+
   constructor(private dialogService: TdDialogService, private mockApiService: MockApiService) {}
 
   loadResource(formValue: ResourceForm): void {
@@ -66,11 +75,17 @@ export class StoreService {
             .afterClosed()
             .subscribe((accept: boolean) => {
               if (accept) {
-                this.compacted = compacted.response;
-                this.expanded = expanded;
-              } else {
+                this.rendering = true;
                 this.compacted = null;
                 this.expanded = null;
+                setTimeout(() => {
+                  this.compacted = compacted.response;
+                  this.expanded = expanded;
+                  this.rendering = false;
+                }, 1);
+              } else {
+                this.compacted = undefined;
+                this.expanded = undefined;
               }
             });
         } else {
@@ -79,8 +94,8 @@ export class StoreService {
         }
       },
       error: (error: HttpErrorResponse) => {
-        this.compacted = null;
-        this.expanded = null;
+        this.compacted = undefined;
+        this.expanded = undefined;
         this.loading = false;
 
         console.error(error);
@@ -123,7 +138,14 @@ export class StoreService {
         .filter((c) => c['@id'])
         .map((c) => {
           const id: string = (c['@id'] as string).replace(replaceString, '');
-          const name = c.name as string | undefined;
+          let name = c.abbreviation as string | undefined;
+          if (!name) {
+            name = c.name as string | undefined;
+          } else {
+            if (c.versionNumber) {
+              name += ` ${c.versionNumber}`;
+            }
+          }
           return new ResourceOption(id, name || id);
         });
     } else {

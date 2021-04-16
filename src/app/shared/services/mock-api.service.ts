@@ -6,7 +6,7 @@ import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Classification, Context, GenericResource, HasContext, HasId, OrArray } from '@app/shared/models';
+import { Classification, Concordance, Context, GenericResource, HasContext, HasId, OrArray } from '@app/shared/models';
 import { getHttpClientLoader } from '@app/shared/utils/jsonld-loaders.model';
 import { CacheInterceptor } from './cache-interceptor.service';
 import { WarnableResponse } from '../models/warnable-response.model';
@@ -74,16 +74,25 @@ export class MockApiService {
       .pipe(
         map((response) => {
           let warning: string | undefined;
-          // Create warning for large classification details
           if (
             Array.isArray(response['@context']) &&
             response['@context'].some((c) => c === 'http://localhost:8080/aria-api/api/context/classification-detail')
           ) {
+            // Create warning for large classification-detail
             const classification = (response as unknown) as Classification;
             if (classification.levels?.length > 3) {
               warning = `This classification has ${classification.levels.length || 0} levels and ${
                 classification.codes?.length || 0
               } root codes and could be very large which could cause long render times or the browser could lock up.`;
+            }
+          } else if (
+            Array.isArray(response['@context']) &&
+            response['@context'].some((c) => c === 'http://localhost:8080/aria-api/api/context/concordance-detail')
+          ) {
+            // Create warning for large concordance-detail
+            const concordance = (response as unknown) as Concordance;
+            if (concordance.codeMaps?.length > 100) {
+              warning = `This concordance has ${concordance.codeMaps?.length} code maps could be very large which could cause long render times or the browser could lock up.`;
             }
           }
           return new WarnableResponse<T>(response, warning);

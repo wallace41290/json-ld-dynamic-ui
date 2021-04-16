@@ -3,13 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { EditorRoutingModule } from './editor-routing.module';
 import { EditorComponent } from './editor.component';
-
+import { TryingToRenderModule } from '@app/shared';
 
 @NgModule({
+  imports: [CommonModule, EditorRoutingModule, TryingToRenderModule],
   declarations: [EditorComponent],
-  imports: [
-    CommonModule,
-    EditorRoutingModule
-  ]
 })
-export class EditorModule { }
+export class EditorModule {}

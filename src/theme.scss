@@ -1,5 +1,6 @@
 @import '~@angular/material/theming';
 @import '~@covalent/core/theming/all-theme';
+@import './app/shared/components/trying-to-render/trying-to-render-theme';
 
 @include mat-core();
 
@@ -40,6 +41,7 @@ $dark-theme: mat-dark-theme(
 @include angular-material-theme($dark-theme);
 @include covalent-theme($dark-theme);
 @include generic-property-viewer-theme($dark-theme);
+@include trying-to-render-theme($dark-theme);
 
 body {
   &:not(.light-theme) {

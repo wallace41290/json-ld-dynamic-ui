@@ -1,1 +1,2 @@
+<app-trying-to-render *ngIf="store.rendering$ | async"></app-trying-to-render>
 <app-generic-resource-viewer [json]="store.expanded$ | async | extractJsonLdObject"></app-generic-resource-viewer>

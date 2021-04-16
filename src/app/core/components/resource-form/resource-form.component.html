@@ -11,7 +11,7 @@
   <mat-form-field [color]="activeTheme === 'LIGHT' ? 'primary' : 'accent'">
     <mat-label>ID</mat-label>
     <input matInput type="text" formControlName="id" [matAutocomplete]="auto" />
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete #auto="matAutocomplete" panelWidth="518px">
       <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.id">
         {{ option.name || option.id }}
       </mat-option>

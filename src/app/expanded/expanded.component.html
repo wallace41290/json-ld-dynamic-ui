@@ -1,3 +1,4 @@
+<app-trying-to-render *ngIf="store.rendering$ | async"></app-trying-to-render>
 <td-json-formatter
   *ngIf="store.expanded$ | async | extractJsonLdObject as data"
   class="on-background"
