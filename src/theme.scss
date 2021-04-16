@@ -1,5 +1,5 @@
-@import "~@angular/material/theming";
-@import "~@covalent/core/theming/all-theme";
+@import '~@angular/material/theming';
+@import '~@covalent/core/theming/all-theme';
 
 @include mat-core();
 
@@ -41,7 +41,7 @@ $dark-theme: mat-dark-theme(
 @include covalent-theme($dark-theme);
 @include generic-property-viewer-theme($dark-theme);
 
-app-root {
+body {
   &:not(.light-theme) {
     td-json-formatter.on-background {
       .td-json-formatter-wrapper {

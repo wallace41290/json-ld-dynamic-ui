@@ -1,0 +1,36 @@
+<td-layout class="layout-card-over-demo" sidenavWidth="280px">
+  <td-layout-nav toolbarTitle="JSON-LD Dynamic UI Mess-around">
+    <div td-toolbar-content>
+      <app-theme-toggle [(value)]="activeTheme"></app-theme-toggle>
+    </div>
+
+    <td-layout-card-over>
+      <app-resource-form
+        [activeTheme]="activeTheme"
+        [formValue]="initialResource"
+        [options]="store.options$ | async"
+        [pending]="store.loading$ | async"
+        (submitted)="store.loadResource($event)"
+        (typeChange)="store.updateResourceOptions($event)"
+      ></app-resource-form>
+      <div td-after-card>
+        <mat-progress-bar *ngIf="store.loading$ | async" color="accent" mode="indeterminate"></mat-progress-bar>
+
+        <nav mat-tab-nav-bar mat-align-tabs="center" selectedIndex="2">
+          <a
+            mat-tab-link
+            *ngFor="let tab of tabs"
+            [routerLink]="[tab.route]"
+            routerLinkActive="active"
+            #rla="routerLinkActive"
+            [active]="rla.isActive"
+          >
+            <mat-icon>{{ tab.icon }}</mat-icon>
+            {{ tab.label }}
+          </a>
+        </nav>
+        <router-outlet></router-outlet>
+      </div>
+    </td-layout-card-over>
+  </td-layout-nav>
+</td-layout>

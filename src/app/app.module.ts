@@ -1,45 +1,16 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppComponent, CoreModule } from '@app/core';
+import { ApiKeyInterceptor, CacheInterceptor } from '@app/shared/services';
 import { CovalentDialogsModule } from '@covalent/core/dialogs';
-import { CovalentJsonFormatterModule } from '@covalent/core/json-formatter';
-import { CovalentLayoutModule } from '@covalent/core/layout';
 
 import { AppRoutingModule } from './app-routing.module';
-import { GenericResourceViewerModule, ResourceFormModule, ThemeToggleModule } from './components';
-import { AppComponent } from './containers';
-import { ExtractJsonLdObjectPipeModule } from './pipes';
-import { ApiKeyInterceptor, CacheInterceptor } from './services';
-
-const LocalModules = [
-  ExtractJsonLdObjectPipeModule,
-  GenericResourceViewerModule,
-  ResourceFormModule,
-  ThemeToggleModule,
-];
-const CovalentModules = [
-  CovalentDialogsModule,
-  CovalentLayoutModule,
-  CovalentJsonFormatterModule,
-];
-const MaterialModules = [MatIconModule, MatProgressBarModule, MatTabsModule];
 
 @NgModule({
-  imports: [
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    BrowserModule,
-    CovalentModules,
-    HttpClientModule,
-    LocalModules,
-    MaterialModules,
-  ],
-  declarations: [AppComponent],
+  imports: [AppRoutingModule, BrowserAnimationsModule, BrowserModule, CoreModule, HttpClientModule, CovalentDialogsModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

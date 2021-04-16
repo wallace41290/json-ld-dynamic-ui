@@ -1,0 +1,7 @@
+<td-json-formatter
+  *ngIf="store.compacted$ | async as data"
+  class="on-background"
+  [data]="data"
+  key="Compacted JSON"
+  [levelsOpen]="2"
+></td-json-formatter>

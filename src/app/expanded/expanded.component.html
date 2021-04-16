@@ -1,0 +1,7 @@
+<td-json-formatter
+  *ngIf="store.expanded$ | async | extractJsonLdObject as data"
+  class="on-background"
+  [data]="data"
+  key="Expanded JSON"
+  [levelsOpen]="3"
+></td-json-formatter>
