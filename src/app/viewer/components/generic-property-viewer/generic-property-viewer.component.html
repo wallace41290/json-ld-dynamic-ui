@@ -1,34 +1,38 @@
 <ng-container *ngIf="property">
-  <!-- Show info about property, TODO need to resolve -->
-  <h3 class="property-name">{{ property.iri | tempPropName | titlecase }}</h3>
-  <ng-container *ngIf="property.value | isArray">
-    <ng-container *ngFor="let prop of $any(property.value)">
-      <ng-container *ngIf="prop['@id']; else values">
-        <ng-container
-          *ngFor="
-            let property of prop | filterResourceProperties;
-            let last = last
-          "
-        >
-          <app-generic-property-viewer
-            [property]="property"
-            [depth]="depth + 1"
-          >
-          </app-generic-property-viewer>
-          <mat-divider *ngIf="last"></mat-divider>
-        </ng-container>
+  <h3 class="property-name">
+    <ng-container *ngIf="loadingPropertyMetadata$ | async; else loaded">...</ng-container>
+    <ng-template #loaded>
+      <ng-container *ngIf="propertyMetadata$ | async as meta; else noMeta">
+        <ng-container *ngIf="meta | hasProperty: 'name'; else noMeta">{{ meta.name }}</ng-container>
+        <span *ngIf="meta | hasProperty: 'description'" class="property-description">- {{ meta.description }}</span>
       </ng-container>
-      <ng-template #values>
-        <mat-list>
-          <mat-list-item *ngIf="prop['@value']">
-            <p matLine>
-              {{ prop["@value"] }}
-              <span *ngIf="prop['@language']">[{{ prop["@language"] }}]</span>
-            </p>
-          </mat-list-item>
-        </mat-list>
-      </ng-template>
+      <ng-template #noMeta>{{ property.iri | tempPropName | titlecase }}</ng-template>
+    </ng-template>
+    <button mat-icon-button class="expand-button" (click)="expanded = !expanded">
+      <mat-icon>{{ expanded ? 'expand_more' : 'expand_less' }}</mat-icon>
+    </button>
+  </h3>
+  <div [class.hide]="!expanded">
+    <ng-container *ngIf="property.value | isArray">
+      <ng-container *ngFor="let prop of $any(property.value)">
+        <ng-container *ngIf="prop['@id']; else values">
+          <ng-container *ngFor="let property of prop | filterResourceProperties; let last = last">
+            <app-generic-property-viewer [property]="property" [depth]="depth + 1"> </app-generic-property-viewer>
+            <mat-divider *ngIf="last"></mat-divider>
+          </ng-container>
+        </ng-container>
+        <ng-template #values>
+          <mat-list>
+            <mat-list-item *ngIf="prop['@value']">
+              <p matLine>
+                {{ prop['@value'] }}
+                <span *ngIf="prop['@language']">[{{ prop['@language'] }}]</span>
+              </p>
+            </mat-list-item>
+          </mat-list>
+        </ng-template>
+      </ng-container>
     </ng-container>
-  </ng-container>
-  <!-- TODO Handle other cases -->
+    <!-- TODO Handle other cases -->
+  </div>
 </ng-container>

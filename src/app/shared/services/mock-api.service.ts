@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { expand, NodeObject, JsonLdDocument } from 'jsonld';
+import { Classification, Concordance, Context, GenericResource, HasContext, HasId, OrArray } from '@app/shared/models';
+import { getHttpClientLoader } from '@app/shared/utils/jsonld-loaders.model';
+import { expand, JsonLdDocument, NodeObject } from 'jsonld';
 import { JsonLdArray } from 'jsonld/jsonld-spec';
 import { from, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Classification, Concordance, Context, GenericResource, HasContext, HasId, OrArray } from '@app/shared/models';
-import { getHttpClientLoader } from '@app/shared/utils/jsonld-loaders.model';
-import { CacheInterceptor } from './cache-interceptor.service';
 import { WarnableResponse } from '../models/warnable-response.model';
+import { CacheInterceptor } from './cache-interceptor.service';
 
 @Injectable({ providedIn: 'root' })
 export class MockApiService {
@@ -51,7 +51,7 @@ export class MockApiService {
 
   /**
    * Contexts can either be directly embedded into the document (an embedded context) or be referenced using a URL.
-   * This method will GET refernced contexts by the given URL.
+   * This method will GET referenced contexts by the given URL.
    * @param url A referenced context's URL
    * @param clearCache Whether to clear the cache, default to false
    * @returns The context

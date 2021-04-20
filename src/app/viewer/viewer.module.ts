@@ -8,7 +8,7 @@ import { ViewerRoutingModule } from './viewer-routing.module';
 import { ViewerComponent } from './viewer.component';
 
 @NgModule({
-  imports: [CommonModule, ViewerRoutingModule, GenericResourceViewerModule, ExtractJsonLdObjectPipeModule, TryingToRenderModule],
+  imports: [CommonModule, ExtractJsonLdObjectPipeModule, GenericResourceViewerModule, TryingToRenderModule, ViewerRoutingModule],
   declarations: [ViewerComponent],
 })
 export class ViewerModule {}
