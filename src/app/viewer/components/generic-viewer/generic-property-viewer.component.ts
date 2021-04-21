@@ -3,6 +3,8 @@ import { MockApiService } from '@app/shared';
 import { GenericProperty, GenericResource, PropertyType } from '@app/shared/models';
 import { BehaviorSubject } from 'rxjs';
 
+import { GenericViewer } from './generic-viewer.model';
+
 // tslint:disable: variable-name
 
 @Component({
@@ -45,25 +47,7 @@ import { BehaviorSubject } from 'rxjs';
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GenericPropertyViewerComponent {
-  /**
-   * Property nested depth from the root resource.
-   * i.e. depth of 0 indicates this is a direct child of the root resource.
-   */
-  @Input()
-  get depth(): number {
-    return this._depth;
-  }
-  set depth(depth: number) {
-    this._depth = depth;
-    // Start items with a depth greater than one as collapsed
-    if (this.depth > 2) {
-      this.expanded = false;
-      this.propsVisible = 2;
-    }
-  }
-  private _depth = 0;
-
+export class GenericPropertyViewerComponent extends GenericViewer {
   /** The property to display */
   @Input()
   get property(): GenericProperty | null | undefined {
@@ -81,12 +65,12 @@ export class GenericPropertyViewerComponent {
   loadingPropertyMetadata$ = new BehaviorSubject<boolean>(false);
   /** Metadata about the property */
   propertyMetadata$ = new BehaviorSubject<GenericResource | undefined>(undefined);
-  /** Whether the contents are expanded */
-  expanded = true;
   /** Number of properties visible. */
   propsVisible = 10;
 
-  constructor(private apiService: MockApiService) {}
+  constructor(private apiService: MockApiService) {
+    super();
+  }
 
   /**
    * Show more visible properties
