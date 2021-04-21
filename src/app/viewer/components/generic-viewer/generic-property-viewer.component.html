@@ -6,7 +6,7 @@
         <ng-container *ngIf="meta | hasProperty: 'name'; else noMeta">{{ meta.name }}</ng-container>
         <span *ngIf="meta | hasProperty: 'description'" class="property-description">- {{ meta.description }}</span>
       </ng-container>
-      <ng-template #noMeta>{{ property.iri | tempPropName | titlecase }}</ng-template>
+      <ng-template #noMeta>{{ property.iri | fallbackPropName | titlecase }}</ng-template>
     </ng-template>
     <button mat-icon-button class="expand-button" (click)="expanded = !expanded">
       <mat-icon>{{ expanded ? 'expand_more' : 'expand_less' }}</mat-icon>
@@ -16,10 +16,11 @@
     <ng-container *ngIf="property.value | isArray">
       <ng-container *ngFor="let prop of $any(property.value)">
         <ng-container *ngIf="prop['@id']; else values">
-          <ng-container *ngFor="let property of prop | filterResourceProperties; let last = last">
+          <app-generic-resource-viewer [json]="$any(prop)" [depth]="depth + 1"></app-generic-resource-viewer>
+          <!-- <ng-container *ngFor="let property of prop | filterResourceProperties; let last = last">
             <app-generic-property-viewer [property]="property" [depth]="depth + 1"> </app-generic-property-viewer>
             <mat-divider *ngIf="last"></mat-divider>
-          </ng-container>
+          </ng-container> -->
         </ng-container>
         <ng-template #values>
           <mat-list>

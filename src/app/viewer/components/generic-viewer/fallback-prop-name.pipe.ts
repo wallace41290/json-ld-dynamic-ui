@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'tempPropName',
+  name: 'fallbackPropName',
 })
-export class TempPropNamePipe implements PipeTransform {
+export class FallbackPropName implements PipeTransform {
   transform(value: string): string {
     const slashParts = value.split('/');
     const last = slashParts[slashParts.length - 1];

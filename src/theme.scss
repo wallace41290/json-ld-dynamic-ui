@@ -9,6 +9,10 @@
   $dark-background: rgba(255, 255, 255, 0.1);
   $light-background: rgba(0, 0, 0, 0.1);
 
+  app-generic-resource-viewer {
+    border-color: if($is-dark, $dark-background, $light-background);
+  }
+
   app-generic-property-viewer {
     background: if($is-dark, $dark-background, $light-background);
   }

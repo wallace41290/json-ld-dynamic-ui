@@ -15,7 +15,6 @@ import { BehaviorSubject } from 'rxjs';
         padding: 8px;
         border-radius: 8px;
         margin-top: 8px;
-        margin-bottom: 8px;
       }
       .property-name {
         margin: 0;
@@ -28,7 +27,7 @@ import { BehaviorSubject } from 'rxjs';
         float: right;
         width: 28px;
         height: 28px;
-        line-height: 28px;
+        line-height: 1;
       }
       .hide {
         display: none;

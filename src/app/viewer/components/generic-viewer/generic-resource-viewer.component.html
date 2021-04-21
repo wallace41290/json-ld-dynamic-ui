@@ -1,0 +1,20 @@
+<ng-container *ngIf="json">
+  <!-- Resource Information -->
+  <mat-list>
+    <mat-list-item *ngIf="json['@id']">
+      <mat-icon matListIcon>label</mat-icon>
+      <h3 matLine>ID</h3>
+      <p matLine>{{ json['@id'] }}</p>
+    </mat-list-item>
+  </mat-list>
+
+  <button *ngIf="depth > 0" mat-icon-button class="expand-button" (click)="expanded = !expanded">
+    <mat-icon>{{ expanded ? 'expand_more' : 'expand_less' }}</mat-icon>
+  </button>
+
+  <!-- Resource Properties -->
+  <div [class.hide]="!expanded">
+    <app-generic-property-viewer *ngFor="let property of json | filterResourceProperties" [property]="property">
+    </app-generic-property-viewer>
+  </div>
+</ng-container>

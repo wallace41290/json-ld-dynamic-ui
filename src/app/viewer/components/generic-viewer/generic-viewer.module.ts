@@ -6,8 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { FilterResourcePropertiesPipeModule, HasPropertyPipeModule, IsArrayPipeModule } from '@app/shared/pipes';
 
+import { FallbackPropName } from './fallback-prop-name.pipe';
 import { GenericPropertyViewerComponent } from './generic-property-viewer.component';
-import { TempPropNamePipe } from './temp-prop-name.pipe';
+import { GenericResourceViewerComponent } from './generic-resource-viewer.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { TempPropNamePipe } from './temp-prop-name.pipe';
     MatIconModule,
     MatListModule,
   ],
-  declarations: [GenericPropertyViewerComponent, TempPropNamePipe],
-  exports: [GenericPropertyViewerComponent],
+  declarations: [GenericPropertyViewerComponent, GenericResourceViewerComponent, FallbackPropName],
+  exports: [GenericPropertyViewerComponent, GenericResourceViewerComponent],
 })
-export class GenericPropertyViewerModule {}
+export class GenericViewerModule {}
