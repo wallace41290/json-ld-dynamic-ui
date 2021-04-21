@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { JsonLdObj } from 'jsonld/jsonld-spec';
 
+// tslint:disable: variable-name
+
 @Component({
   selector: 'app-generic-resource-viewer',
   templateUrl: 'generic-resource-viewer.component.html',
@@ -35,16 +37,22 @@ export class GenericResourceViewerComponent {
     return this.depth > 0 ? '1px' : '0px';
   }
 
-  @HostBinding('style.margin-left')
-  get indentation(): string {
-    return `${this.depth * 16}px`;
-  }
-
   /**
    * Property nested depth from the root resource.
    * i.e. depth of 0 indicates this is a direct child of the root resource.
    */
-  @Input() depth = 0;
+  @Input()
+  get depth(): number {
+    return this._depth;
+  }
+  set depth(depth: number) {
+    this._depth = depth;
+    // Start items with a depth greater than one as collapsed
+    if (this.depth > 2) {
+      this.expanded = false;
+    }
+  }
+  private _depth = 0;
 
   @Input() json: JsonLdObj | null | undefined;
 

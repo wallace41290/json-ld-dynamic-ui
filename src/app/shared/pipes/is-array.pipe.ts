@@ -8,12 +8,8 @@ import { NgModule, Pipe, PipeTransform } from '@angular/core';
 })
 export class IsArrayPipe implements PipeTransform {
   transform<T>(something: T[] | unknown | null | undefined): something is T[] {
-    if (
-      something !== null &&
-      something !== undefined &&
-      Array.isArray(something)
-    ) {
-      return true;
+    if (something !== null && something !== undefined) {
+      return Array.isArray(something);
     }
     return false;
   }

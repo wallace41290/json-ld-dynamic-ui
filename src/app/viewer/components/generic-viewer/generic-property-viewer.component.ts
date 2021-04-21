@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MockApiService } from '@app/shared';
 import { GenericProperty, GenericResource, PropertyType } from '@app/shared/models';
 import { BehaviorSubject } from 'rxjs';
@@ -35,21 +35,34 @@ import { BehaviorSubject } from 'rxjs';
       mat-list {
         padding-top: 0;
       }
+      footer {
+        margin-top: 8px;
+      }
+      footer .mat-caption {
+        margin: 0;
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GenericPropertyViewerComponent {
-  @HostBinding('style.margin-left')
-  get indentation(): string {
-    return `${this.depth * 16}px`;
-  }
-
   /**
    * Property nested depth from the root resource.
    * i.e. depth of 0 indicates this is a direct child of the root resource.
    */
-  @Input() depth = 0;
+  @Input()
+  get depth(): number {
+    return this._depth;
+  }
+  set depth(depth: number) {
+    this._depth = depth;
+    // Start items with a depth greater than one as collapsed
+    if (this.depth > 2) {
+      this.expanded = false;
+      this.propsVisible = 2;
+    }
+  }
+  private _depth = 0;
 
   /** The property to display */
   @Input()
@@ -70,8 +83,18 @@ export class GenericPropertyViewerComponent {
   propertyMetadata$ = new BehaviorSubject<GenericResource | undefined>(undefined);
   /** Whether the contents are expanded */
   expanded = true;
+  /** Number of properties visible. */
+  propsVisible = 10;
 
   constructor(private apiService: MockApiService) {}
+
+  /**
+   * Show more visible properties
+   * @param num number of properties to show
+   */
+  showMore(num: number): void {
+    this.propsVisible += num;
+  }
 
   _trackByPropertyType<T extends PropertyType>(index: number, item: T): any {
     if ('@id' in item) {

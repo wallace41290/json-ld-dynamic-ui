@@ -14,7 +14,7 @@
 
   <!-- Resource Properties -->
   <div [class.hide]="!expanded">
-    <app-generic-property-viewer *ngFor="let property of json | filterResourceProperties" [property]="property">
+    <app-generic-property-viewer *ngFor="let property of json | filterResourceProperties" [property]="property" [depth]="depth + 1">
     </app-generic-property-viewer>
   </div>
 </ng-container>

@@ -14,7 +14,7 @@
   </h3>
   <div [class.hide]="!expanded">
     <ng-container *ngIf="property.value | isArray; else notArray">
-      <ng-container *ngFor="let prop of $any(property.value); trackBy: _trackByPropertyType">
+      <ng-container *ngFor="let prop of $any($any(property.value) | slice: 0:propsVisible); trackBy: _trackByPropertyType">
         <ng-container *ngIf="prop['@id']; else values">
           <app-generic-resource-viewer [json]="$any(prop)" [depth]="depth + 1"></app-generic-resource-viewer>
         </ng-container>
@@ -29,6 +29,14 @@
           </mat-list>
         </ng-template>
       </ng-container>
+      <footer *ngIf="property.value.length > 10" fxLayout="row" fxLayoutAlign="space-between center">
+        <button *ngIf="propsVisible < $any(property.value).length" mat-button (click)="showMore(10)">
+          SHOW {{ property.value.length | showXMore: propsVisible:10 }} MORE
+        </button>
+        <p class="mat-caption">
+          Showing {{ propsVisible < property.value.length ? propsVisible : property.value.length }} of {{ property.value.length }}
+        </p>
+      </footer>
     </ng-container>
     <ng-template #notArray>
       <!-- TODO -->
