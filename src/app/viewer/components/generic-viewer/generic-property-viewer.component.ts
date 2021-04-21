@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, HostBinding, Input } from '@angular/core';
 import { MockApiService } from '@app/shared';
-import { GenericProperty, GenericResource } from '@app/shared/models';
+import { GenericProperty, GenericResource, PropertyType } from '@app/shared/models';
 import { BehaviorSubject } from 'rxjs';
 
 // tslint:disable: variable-name
@@ -72,6 +72,13 @@ export class GenericPropertyViewerComponent {
   expanded = true;
 
   constructor(private apiService: MockApiService) {}
+
+  _trackByPropertyType<T extends PropertyType>(index: number, item: T): any {
+    if ('@id' in item) {
+      return item['@id'];
+    }
+    return index;
+  }
 
   private _resolvePropertyMetadata(): void {
     this.loadingPropertyMetadata$.next(true);

@@ -14,7 +14,7 @@
   </h3>
   <div [class.hide]="!expanded">
     <ng-container *ngIf="property.value | isArray; else notArray">
-      <ng-container *ngFor="let prop of $any(property.value)">
+      <ng-container *ngFor="let prop of $any(property.value); trackBy: _trackByPropertyType">
         <ng-container *ngIf="prop['@id']; else values">
           <app-generic-resource-viewer [json]="$any(prop)" [depth]="depth + 1"></app-generic-resource-viewer>
         </ng-container>
