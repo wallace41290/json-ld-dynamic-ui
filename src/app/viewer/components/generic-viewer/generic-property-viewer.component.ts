@@ -50,6 +50,8 @@ export class GenericPropertyViewerComponent {
    * i.e. depth of 0 indicates this is a direct child of the root resource.
    */
   @Input() depth = 0;
+
+  /** The property to display */
   @Input()
   get property(): GenericProperty | null | undefined {
     return this._property;
@@ -62,7 +64,9 @@ export class GenericPropertyViewerComponent {
   }
   private _property: GenericProperty | null | undefined;
 
+  /** Whether the property's metadata is loading */
   loadingPropertyMetadata$ = new BehaviorSubject<boolean>(false);
+  /** Metadata about the property */
   propertyMetadata$ = new BehaviorSubject<GenericResource | undefined>(undefined);
   /** Whether the contents are expanded */
   expanded = true;

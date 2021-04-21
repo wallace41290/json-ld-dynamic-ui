@@ -13,14 +13,10 @@
     </button>
   </h3>
   <div [class.hide]="!expanded">
-    <ng-container *ngIf="property.value | isArray">
+    <ng-container *ngIf="property.value | isArray; else notArray">
       <ng-container *ngFor="let prop of $any(property.value)">
         <ng-container *ngIf="prop['@id']; else values">
           <app-generic-resource-viewer [json]="$any(prop)" [depth]="depth + 1"></app-generic-resource-viewer>
-          <!-- <ng-container *ngFor="let property of prop | filterResourceProperties; let last = last">
-            <app-generic-property-viewer [property]="property" [depth]="depth + 1"> </app-generic-property-viewer>
-            <mat-divider *ngIf="last"></mat-divider>
-          </ng-container> -->
         </ng-container>
         <ng-template #values>
           <mat-list>
@@ -34,6 +30,10 @@
         </ng-template>
       </ng-container>
     </ng-container>
-    <!-- TODO Handle other cases -->
+    <ng-template #notArray>
+      <!-- TODO -->
+      <p class="mat-caption">UNHANDLED CASE</p>
+      <td-json-formatter class="on-background" [data]="property.value" [levelsOpen]="1"></td-json-formatter>
+    </ng-template>
   </div>
 </ng-container>

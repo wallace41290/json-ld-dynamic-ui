@@ -5,6 +5,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { FilterResourcePropertiesPipeModule, HasPropertyPipeModule, IsArrayPipeModule } from '@app/shared/pipes';
+import { CovalentJsonFormatterModule } from '@covalent/core/json-formatter';
 
 import { FallbackPropName } from './fallback-prop-name.pipe';
 import { GenericPropertyViewerComponent } from './generic-property-viewer.component';
@@ -13,6 +14,7 @@ import { GenericResourceViewerComponent } from './generic-resource-viewer.compon
 @NgModule({
   imports: [
     CommonModule,
+    CovalentJsonFormatterModule,
     FilterResourcePropertiesPipeModule,
     HasPropertyPipeModule,
     IsArrayPipeModule,
